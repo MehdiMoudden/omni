@@ -8,12 +8,14 @@ from pathlib import Path
 from typing import Iterable, Iterator, List
 
 import requests
+from dotenv import load_dotenv
 
-DEFAULT_ES_URL = "https://my-elasticsearch-project-bcf9d2.es.us-east-1.aws.elastic.cloud"
-DEFAULT_API_KEY = os.environ.get(
-    "ELASTIC_API_KEY",
-    "STQ0dTdKa0JtRWl0cWdMZnBTZnE6dFpoTFdERFRBVjBkUjZyTENpbEE1UQ==",
-)
+load_dotenv()
+
+# Replace hardcoded placeholder with env-driven config (no secret defaults)
+DEFAULT_ES_URL = os.getenv("ES_URL")  # require setting in .env or CLI
+DEFAULT_API_KEY = os.getenv("ELASTIC_API_KEY")
+
 DEFAULT_PRODUCTS_INDEX = "healthy-basket-products"
 DEFAULT_PROMOTIONS_INDEX = "healthy-basket-promotions"
 DEFAULT_CHUNK_SIZE = 500
@@ -31,13 +33,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--es-url",
-        default=DEFAULT_ES_URL,
-        help="Elasticsearch endpoint (protocol + host).",
+        default=os.getenv("ES_URL", DEFAULT_ES_URL),
+        help="Elasticsearch endpoint (protocol + host) or set ES_URL in .env.",
     )
     parser.add_argument(
         "--api-key",
-        default=DEFAULT_API_KEY,
-        help="Elasticsearch API key (or provide via ELASTIC_API_KEY env var).",
+        default=os.getenv("ELASTIC_API_KEY", DEFAULT_API_KEY),
+        help="Elasticsearch API key (or set ELASTIC_API_KEY in env/.env).",
     )
     parser.add_argument(
         "--products-index",

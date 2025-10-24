@@ -9,12 +9,14 @@ import os
 from typing import Any, Dict, List, Tuple
 
 import requests
+from dotenv import load_dotenv
 
-DEFAULT_MCP_URL = (
-    "https://my-elasticsearch-project-bcf9d2.kb.us-east-1.aws.elastic.cloud"
-    "/api/agent_builder/mcp"
-)
-DEFAULT_API_KEY = "STQ0dTdKa0JtRWl0cWdMZnBTZnE6dFpoTFdERFRBVjBkUjZyTENpbEE1UQ=="
+# load local .env if present
+load_dotenv()
+
+# remove hardcoded secrets; require values from env or CLI
+DEFAULT_MCP_URL = os.getenv("MCP_URL")  # require setting in .env or via --url
+DEFAULT_API_KEY = os.getenv("MCP_API_KEY")
 DEFAULT_CANDIDATE_TOOLS: List[Tuple[str, Dict[str, Any]]] = [
     ("healthy_basket_products", {"nlQuery": "show budget friendly products", "size": 5}),
     ("healthy_basket_promotions", {"nlQuery": "current promotions", "size": 5}),
@@ -140,6 +142,8 @@ def parse_tool_specs(specs: List[str]) -> List[Tuple[str, Dict[str, Any]]]:
 def main() -> None:
     args = parse_args()
 
+    if not args.url:
+        raise SystemExit("MCP URL is required via --url or MCP_URL env var.")
     if not args.api_key:
         raise SystemExit("API key is required via --api-key or MCP_API_KEY env var.")
 
