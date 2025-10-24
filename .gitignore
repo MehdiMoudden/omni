@@ -1,0 +1,20 @@
+# env / secrets
+.env
+.env.*
+.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.envrc
+
+# Node / JS
+node_modules/
+dist/
+build/
+
+# Editors/OS
+.vscode/
+.idea/
+.DS_Store
